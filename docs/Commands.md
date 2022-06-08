@@ -37,7 +37,7 @@ We also found that having all of the classes relating to a single command in one
 ### Validators
 We recommend adding validators for a `Request` using `Fluent Validation` as this provides a great separation of concerns and can be automatically validated using a pipeline behaviour before the `Handler` fires.
 
-### ICommand Interface
+## ICommand Interface
 Each command you create should inherit from the `ICommand` interface. 
 
 The `ICommand` interface reduces the complexity of the code you need to write when creating a command. It provides a way to say that a specific request is a command and removes the need for you to specify the `CommandResult` leading to improved consistency and preventing you from accidentally returning data from a command.
@@ -49,7 +49,7 @@ public interface ICommand : IRequest<CommandResult>
 
 _The `IRequest` interface comes from the MediatR library_
 
-### ICommandHandler interface
+## ICommandHandler interface
 Each command handler you create should inherit from the `ICommandHandler` interface.
 
 The `ICommandHandler` interface reduces the complexity of the code you need to write when creating a command handler. It provides a handler that always returns a `CommandResult` and only works in conjunction with an `ICommand`. 
