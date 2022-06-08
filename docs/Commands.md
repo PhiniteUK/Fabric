@@ -65,6 +65,19 @@ _The `IRequestHandler` interface comes from the MediatR library_
 ## Command Results
 Commands have been set up to always return the `CommandResult` object. This forces consistency across all commands as well as making it clear that there can be no data returned from a command.
 
+```csharp
+public sealed class CommandResult
+{
+    public string ErrorMessage => Exception?.Message ?? "An unknown error occurred.";
+
+    public Exception? Exception { get; private set; }
+
+    public Guid? ObjectId { get; private set; }
+
+    public bool Successful { get; private set; }
+}
+```
+
 ### Error Message
 We chose to add a helper to prevent the need for writing common code when an error message is always needed, eg. for showing to a user. If no exception with a specific message is available in the `CommandResult` then a default error message is returned (An unknown error occurred.).
 
