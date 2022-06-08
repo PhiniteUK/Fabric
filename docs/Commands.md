@@ -65,25 +65,44 @@ _The `IRequestHandler` interface comes from the MediatR library_
 ## Command Results
 Commands have been set up to always return the `CommandResult` object. This forces consistency across all commands as well as making it clear that there can be no data returned from a command.
 
-```csharp
-public sealed class CommandResult
-{
-    // Helper to ensure you can easily always return a string containing an error message.
-    public string ErrorMessage => Exception?.Message ?? "An unknown error occurred.";
-
-    // The exception relating to the error that occurred.
-    public Exception? Exception { get; private set; }
-
-    // The id of the effected object.
-    public Guid? ObjectId { get; private set; }
-
-    // Was this command successfully executed or not.
-    public bool Successful { get; private set; }
-}
-```
-
 ### Error Message
-We chose to add a helper to prevent the need for writing common code when an error message is always needed, eg. for showing to a user. If no exception with a specific message is available in the `CommandResult` then a default error message is returned.
+We chose to add a helper to prevent the need for writing common code when an error message is always needed, eg. for showing to a user. If no exception with a specific message is available in the `CommandResult` then a default error message is returned (An unknown error occurred.).
+
+### Exception
+The exception can be provided to send an error back to the caller to determine the result of the command.
 
 ### Object Id
 We chose to allow a command to return a single piece of data, the ID of the object that was created. This decision was made to make querying data simpler after initial object creation. Given the common flow of execute a command then load the created object it makes retrieving the ID of the newly created object much simpler.
+
+### Successful
+This provides the status of the command (did it succeed or fail).
+
+## Creating Results
+To allow creation of results more easily there are a number of static factory methods.
+
+### Error Result
+An error result should be returned when something goes wrong within the `ICommandHandler`. The `Successful` property will be set to `false` and the `Exception` is required.
+
+```csharp
+CommandResult.Error(Exception exception);
+```
+
+### Not Found Result
+A not found result should be returned when an entity could not be found within the `ICommandHandler`. The `Successful` property will be set to `false` and an `EntityNotFoundException` will be automatically created using the `objectId` and `entityName`.
+
+```csharp
+CommandResult.NotFound(string entityName, Guid objectId);
+```
+
+### Success Result
+A success result should be returned when an entity could not be found within the `ICommandHandler`. The `Successful` property will be set to `true`.
+
+```csharp
+CommandResult.Success();
+```
+
+You can also set the `objectId` of the result.
+
+```csharp
+CommandResult.Success(Guid objectId);
+```
