@@ -1,3 +1,7 @@
+# TODO
+
+- [ ] Check nullable warnings for command result successful
+
 # Commands
 Commands in Fabric represent a command from the CQRS pattern. We have created a set of classes and interfaces that can be used to help streamline creation of commands within your applications.
 
